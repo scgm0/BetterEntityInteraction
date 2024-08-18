@@ -1,0 +1,14 @@
+{
+    "type": "code",
+    "modid": "betterentityinteraction",
+    "name": "更好的实体交互",
+    "side": "client",
+    "authors": [
+        "神麤詭末"
+    ],
+    "description": "允许和实体的交互（包括左键攻击）忽略植物方块（比如草）。",
+    "version": "1.0.0",
+    "dependencies": {
+        "game": "1.19"
+    }
+}
