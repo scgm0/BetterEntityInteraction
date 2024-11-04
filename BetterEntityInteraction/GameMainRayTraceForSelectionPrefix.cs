@@ -48,7 +48,7 @@ public static class GameMainRayTraceForSelectionPrefix {
 			var pos1 = new Vec3d(position.X, position.Y, position.Z).Add(blockSelection.HitPosition);
 			var pos2 = entity1.SidedPos.XYZ.Add(___entitySelTmp.HitPosition);
 			if (ray.origin.SquareDistanceTo(pos2) >= (double)ray.origin.SquareDistanceTo(pos1) &&
-				blockSelection.Block.BlockMaterial != EnumBlockMaterial.Plant)
+				blockSelection.Block.BlockMaterial is not EnumBlockMaterial.Plant and not EnumBlockMaterial.Snow)
 				return false;
 			blockSelection = null;
 		}
