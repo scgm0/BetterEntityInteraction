@@ -23,20 +23,16 @@ public static class GameMainRayTraceForSelectionPrefix {
 			length,
 			entity => efilter == null || efilter(entity));
 		Entity entity1 = null;
-		var num1 = 1048576.0;
+		var num1 = double.MaxValue;
 		foreach (var entity2 in entitiesAround) {
-			if (!___interesectionTester.RayIntersectsWithCuboid(entity2.SelectionBox,
-				entity2.SidedPos.X,
-				entity2.SidedPos.Y,
-				entity2.SidedPos.Z)) continue;
-			double num2 = entity2.Pos.SquareDistanceTo(ray.origin.X, ray.origin.Y, ray.origin.Z);
-			if (!(num2 < num1)) continue;
+			var num2 = 0;
+			if (!entity2.IntersectsRay(ray, ___interesectionTester, out var num3, ref num2) || !(num3 < num1)) continue;
 			entity1 = entity2;
-			num1 = num2;
+			num1 = num3;
+			___entitySelTmp.SelectionBoxIndex = num2;
 			___entitySelTmp.Entity = entity2;
 			___entitySelTmp.Face = ___interesectionTester.hitOnBlockFace;
-			___entitySelTmp.HitPosition =
-				___interesectionTester.hitPosition.SubCopy(entity2.SidedPos.X, entity2.SidedPos.Y, entity2.SidedPos.Z);
+			___entitySelTmp.HitPosition = ___interesectionTester.hitPosition.SubCopy(entity2.SidedPos.X, entity2.SidedPos.Y, entity2.SidedPos.Z);
 			___entitySelTmp.Position = entity2.SidedPos.XYZ;
 		}
 
@@ -46,8 +42,8 @@ public static class GameMainRayTraceForSelectionPrefix {
 		if (blockSelection != null) {
 			var position = blockSelection.Position;
 			var pos1 = new Vec3d(position.X, position.Y, position.Z).Add(blockSelection.HitPosition);
-			var pos2 = entity1.SidedPos.XYZ.Add(___entitySelTmp.HitPosition);
-			if (ray.origin.SquareDistanceTo(pos2) >= (double)ray.origin.SquareDistanceTo(pos1) &&
+			var pos2 = new Vec3d(entity1.SidedPos.X, entity1.SidedPos.Y, entity1.SidedPos.Z).Add(___entitySelTmp.HitPosition);
+			if (ray.origin.SquareDistanceTo(pos2) >= ray.origin.SquareDistanceTo(pos1) &&
 				blockSelection.Block.BlockMaterial is not EnumBlockMaterial.Plant and not EnumBlockMaterial.Snow)
 				return false;
 			blockSelection = null;
