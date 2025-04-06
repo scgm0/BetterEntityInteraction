@@ -18,10 +18,8 @@ public static class GameMainRayTraceForSelectionPrefix {
 		___interesectionTester.bsTester = supplier;
 		var length = (float)ray.Length;
 		blockSelection = ___interesectionTester.GetSelectedBlock(length, bfilter);
-		var entitiesAround = supplier.GetEntitiesAround(ray.origin,
-			length,
-			length,
-			entity => efilter == null || efilter(entity));
+		var entitiesAround =
+			supplier.GetEntitiesAround(ray.origin, length, length, entity => efilter == null || efilter(entity));
 		Entity entity1 = null;
 		var num = double.MaxValue;
 		foreach (var entity2 in entitiesAround) {
@@ -45,9 +43,9 @@ public static class GameMainRayTraceForSelectionPrefix {
 
 		if (blockSelection != null) {
 			var position = blockSelection.Position;
-			var pos1 = new Vec3d(position.X, position.Y, position.Z).Add(blockSelection.HitPosition);
+			var pos1 = new Vec3d((double) position.X, (double) position.Y, (double) position.Z).Add(blockSelection.HitPosition);
 			var pos2 = new Vec3d(entity1.SidedPos.X, entity1.SidedPos.Y, entity1.SidedPos.Z).Add(___entitySelTmp.HitPosition);
-			if (ray.origin.SquareDistanceTo(pos2) >= ray.origin.SquareDistanceTo(pos1) &&
+			if ((double) ray.origin.SquareDistanceTo(pos2) >= (double)ray.origin.SquareDistanceTo(pos1) &&
 				blockSelection.Block.BlockMaterial is not EnumBlockMaterial.Plant and not EnumBlockMaterial.Snow)
 				return false;
 			blockSelection = null;
