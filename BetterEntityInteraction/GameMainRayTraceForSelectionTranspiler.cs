@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -61,7 +62,8 @@ public static class GameMainRayTraceForSelectionTranspiler {
 		var payload = new List<CodeInstruction> {
 			new(OpCodes.Ldarg_3),
 			new(OpCodes.Ldind_Ref),
-			new(OpCodes.Call, AccessTools.Method(typeof(GameMainRayTraceForSelectionTranspiler), nameof(CanPenetrateWithBlock))),
+			new(OpCodes.Call,
+				AccessTools.Method(typeof(GameMainRayTraceForSelectionTranspiler), nameof(CanPenetrateWithBlock))),
 			new(OpCodes.Brtrue, bypassLabel)
 		};
 
@@ -72,6 +74,10 @@ public static class GameMainRayTraceForSelectionTranspiler {
 
 	public static bool CanPenetrateWithBlock(BlockSelection blockSelection) {
 		var mat = blockSelection?.Block?.BlockMaterial;
-		return mat is EnumBlockMaterial.Plant or EnumBlockMaterial.Snow;
+		return mat switch {
+			EnumBlockMaterial.Plant or EnumBlockMaterial.Snow => true,
+			EnumBlockMaterial.Leaves when blockSelection.Block?.CollisionBoxes?.Length is 0 or null => true,
+			_ => false
+		};
 	}
 }
