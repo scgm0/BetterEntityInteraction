@@ -5,7 +5,11 @@ using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.Common;
 
-[assembly: ModInfo(name: "更好的实体交互", modID: "betterentityinteraction", Authors = ["神麤詭末"], Description = "允许和实体的交互（包括左键攻击）忽略植物方块（比如草）。")]
+[assembly:
+	ModInfo(name: "更好的实体交互",
+		modID: "betterentityinteraction",
+		Authors = ["神麤詭末"],
+		Description = "允许和实体的交互（包括左键攻击）忽略植物方块（比如草）。")]
 
 namespace BetterEntityInteraction;
 
@@ -21,8 +25,11 @@ public class BetterEntityInteractionModSystem : ModSystem {
 			typeof(EntityFilter)
 		]);
 
-	static private readonly MethodInfo GameMainRayTraceForSelectionPrefix =
-		typeof(GameMainRayTraceForSelectionPrefix).GetMethod("Prefix");
+	static private readonly MethodInfo GameMainRayTraceForSelectionTranspiler =
+		typeof(GameMainRayTraceForSelectionTranspiler).GetMethod(nameof(BetterEntityInteraction
+			.GameMainRayTraceForSelectionTranspiler.Transpiler));
+
+	public static ICoreClientAPI Api { get; private set; }
 
 	public string HarmonyId => Mod.Info.ModID;
 
@@ -31,13 +38,14 @@ public class BetterEntityInteractionModSystem : ModSystem {
 	public override bool ShouldLoad(EnumAppSide forSide) { return forSide == EnumAppSide.Client; }
 
 	public override void StartClientSide(ICoreClientAPI api) {
+		Api = api;
 		HarmonyInstance.Patch(original: GameMainRayTraceForSelection,
-			prefix: GameMainRayTraceForSelectionPrefix);
+			transpiler: GameMainRayTraceForSelectionTranspiler);
 	}
 
 	public override void Dispose() {
 		base.Dispose();
 		HarmonyInstance.Unpatch(original: GameMainRayTraceForSelection,
-			patch: GameMainRayTraceForSelectionPrefix);
+			patch: GameMainRayTraceForSelectionTranspiler);
 	}
 }
