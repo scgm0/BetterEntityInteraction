@@ -9,6 +9,6 @@
     "description": "允许和实体的交互（包括左键攻击）忽略植物方块（比如草）。",
     "version": "1.0.5",
     "dependencies": {
-        "game": "1.22.0-rc"
+        "game": "1.22.0-rc.1"
     }
 }
